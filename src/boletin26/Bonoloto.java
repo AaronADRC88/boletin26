@@ -13,7 +13,10 @@ public class Bonoloto implements ActionListener {
     private final JFrame primitiva;
     private JButton[][] botonMatriz;
     private final int filas = 10, columnas = 5, maxAp = 6;
-    private int contador = 0;
+    private int contador = 0, contAciert = 0;
+    private int premio1, premio2, premio3, premio4, premio5, premio6;
+    private JButton limpiar, comprobar;
+    private JTextField nWin, nAcertado;
 
     public Bonoloto() {
         primitiva = new JFrame();
@@ -52,10 +55,10 @@ public class Bonoloto implements ActionListener {
 
     private JPanel botones() {
         JPanel panel = new JPanel();
-        JButton limpiar = new JButton("Limpiar");
-        JButton comprobar = new JButton("Comprobar boleto");
-        JTextField nWin = new JTextField(18);
-        JTextField nAcertado = new JTextField(10);
+        limpiar = new JButton("Limpiar");
+        comprobar = new JButton("Comprobar boleto");
+        nWin = new JTextField(18);
+        nAcertado = new JTextField(10);
         JLabel numPrem = new JLabel("numero premiado: ");
         JLabel numAc = new JLabel("numero de aciertos: ");
         limpiar.addActionListener(this);
@@ -68,25 +71,103 @@ public class Bonoloto implements ActionListener {
         panel.add(limpiar);
         return panel;
     }
-    
+
+    public void generaNumeros() {
+
+        premio1 = (int) (Math.random() * 49 + 1);
+        premio2 = (int) (Math.random() * 49 + 1);
+        do {
+            if (premio2 == premio1) {
+                premio2 = (int) (Math.random() * 49 + 1);
+            }
+        } while (premio2 == premio1);
+        premio3 = (int) (Math.random() * 49 + 1);
+        do {
+            if (premio3 == premio1 | premio3 == premio2) {
+                premio3 = (int) (Math.random() * 49 + 1);
+            }
+        } while (premio3 == premio1 | premio3 == premio2);
+        premio4 = (int) (Math.random() * 49 + 1);
+        do {
+            if (premio4 == premio1 | premio4 == premio2 | premio4 == premio3) {
+                premio4 = (int) (Math.random() * 49 + 1);
+            }
+        } while (premio4 == premio1 | premio4 == premio2 | premio4 == premio3);
+        premio5 = (int) (Math.random() * 49 + 1);
+        if (premio5 == premio1 | premio5 == premio2 | premio5 == premio3 | premio5 == premio4) {
+            premio5 = (int) (Math.random() * 49 + 1);
+        }
+        premio6 = (int) (Math.random() * 49 + 1);
+        if (premio6 == premio1 | premio6 == premio2 | premio6 == premio3 | premio6 == premio4 | premio6 == premio5) {
+            premio6 = (int) (Math.random() * 49 + 1);
+        }
+
+    }
+
+    public void comprobarAciert() {
+
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton eBoton = (JButton) e.getSource();
+        if (eBoton.equals(comprobar)) {
+            this.generaNumeros();
+            nWin.setText(String.valueOf(premio1) + "," + String.valueOf(premio2) + "," + String.valueOf(premio3) + "," + String.valueOf(premio4) + "," + String.valueOf(premio5) + "," + String.valueOf(premio6));
+            for (int i = 0; i < filas; i++) {
+                for (int j = 0; j < columnas; j++) {
+                    if (botonMatriz[i][j].getText().equals(String.valueOf(premio1)) && botonMatriz[i][j].getBackground() == Color.red) {
+                        contAciert++;
+                        nAcertado.setText(String.valueOf(contAciert));
+                    }
+                    if (botonMatriz[i][j].getText().equals(String.valueOf(premio2)) && botonMatriz[i][j].getBackground() == Color.red) {
+                        contAciert++;
+                        nAcertado.setText(String.valueOf(contAciert));
+                    }
+                    if (botonMatriz[i][j].getText().equals(String.valueOf(premio3)) && botonMatriz[i][j].getBackground() == Color.red) {
+                        contAciert++;
+                        nAcertado.setText(String.valueOf(contAciert));
+                    }
+                    if (botonMatriz[i][j].getText().equals(String.valueOf(premio4)) && botonMatriz[i][j].getBackground() == Color.red) {
+                        contAciert++;
+                        nAcertado.setText(String.valueOf(contAciert));
+                    }
+                    if (botonMatriz[i][j].getText().equals(String.valueOf(premio5)) && botonMatriz[i][j].getBackground() == Color.red) {
+                        contAciert++;
+                        nAcertado.setText(String.valueOf(contAciert));
+                    }
+                    if (botonMatriz[i][j].getText().equals(String.valueOf(premio6)) && botonMatriz[i][j].getBackground() == Color.red) {
+                        contAciert++;
+                        nAcertado.setText(String.valueOf(contAciert));
+                    }
+
+                }
+            }
+        }
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
                 if (eBoton.equals(botonMatriz[i][j])) {
                     botonMatriz[i][j].setBackground(Color.red);
+                    botonMatriz[i][j].setEnabled(false);
+
                     contador++;
                     if (contador >= maxAp) {
                         for (int k = 0; k < filas; k++) {
                             for (int l = 0; l < columnas; l++) {
-                                botonMatriz[k][l].setEnabled(false);
+                                if (botonMatriz[k][l].getBackground() != Color.red) {
+                                    botonMatriz[k][l].setEnabled(false);
+                                    botonMatriz[k][l].setBackground(Color.LIGHT_GRAY);
+                                }
                             }
                         }
                     }
+
                 }
             }
+
+        }
+        if (contAciert == 6) {
+            JOptionPane.showMessageDialog(null, "ERES MULTIMILLONARIO!!!");
         }
     }
-
 }
