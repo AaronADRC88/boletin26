@@ -17,18 +17,20 @@ public class Bonoloto implements ActionListener {
     private int premio1, premio2, premio3, premio4, premio5, premio6;
     private JButton limpiar, comprobar;
     private JTextField nWin, nAcertado;
+    private int[] numPrem=new int[6];
 
     public Bonoloto() {
         primitiva = new JFrame();
         primitiva.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         botonMatriz = new JButton[filas][columnas];
-        primitiva.setSize(800, 600);
+        primitiva.setSize(200, 700);
         primitiva.setVisible(true);
         primitiva.getContentPane().add(crearApuesta(), BorderLayout.CENTER);
         primitiva.getContentPane().add(botones(), BorderLayout.SOUTH);
         primitiva.pack();
-        primitiva.setMinimumSize(new Dimension(800, 600));
+        primitiva.setMinimumSize(new Dimension(200, 700));
         primitiva.setLocationRelativeTo(null);
+        comprobar.setEnabled(false);
 
     }
 
@@ -94,52 +96,79 @@ public class Bonoloto implements ActionListener {
             }
         } while (premio4 == premio1 | premio4 == premio2 | premio4 == premio3);
         premio5 = (int) (Math.random() * 49 + 1);
-        if (premio5 == premio1 | premio5 == premio2 | premio5 == premio3 | premio5 == premio4) {
-            premio5 = (int) (Math.random() * 49 + 1);
-        }
+        do {
+            if (premio5 == premio1 | premio5 == premio2 | premio5 == premio3 | premio5 == premio4) {
+                premio5 = (int) (Math.random() * 49 + 1);
+            }
+        } while (premio5 == premio1 | premio5 == premio2 | premio5 == premio3 | premio5 == premio4);
         premio6 = (int) (Math.random() * 49 + 1);
-        if (premio6 == premio1 | premio6 == premio2 | premio6 == premio3 | premio6 == premio4 | premio6 == premio5) {
-            premio6 = (int) (Math.random() * 49 + 1);
-        }
-
-    }
-
-    public void comprobarAciert() {
-
+        do {
+            if (premio6 == premio1 | premio6 == premio2 | premio6 == premio3 | premio6 == premio4 | premio6 == premio5) {
+                premio6 = (int) (Math.random() * 49 + 1);
+            }
+        } while (premio6 == premio1 | premio6 == premio2 | premio6 == premio3 | premio6 == premio4 | premio6 == premio5);
+        
+        
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton eBoton = (JButton) e.getSource();
+        if (eBoton.equals(limpiar)) {
+            for (int i = 0; i < filas; i++) {
+                for (int j = 0; j < columnas; j++) {
+                    for (int k = 0; k < filas; k++) {
+                        for (int l = 0; l < columnas; l++) {
+                            botonMatriz[0][0].setEnabled(false);
+                            botonMatriz[k][l].setEnabled(true);
+                            botonMatriz[k][l].setBackground(null);
+                            nWin.setText(null);
+                            nAcertado.setText(null);
+                            contador = 0;
+                            contAciert = 0;
+                        }
+                    }
+                }
+            }
+        }
         if (eBoton.equals(comprobar)) {
             this.generaNumeros();
             nWin.setText(String.valueOf(premio1) + "," + String.valueOf(premio2) + "," + String.valueOf(premio3) + "," + String.valueOf(premio4) + "," + String.valueOf(premio5) + "," + String.valueOf(premio6));
             for (int i = 0; i < filas; i++) {
                 for (int j = 0; j < columnas; j++) {
                     if (botonMatriz[i][j].getText().equals(String.valueOf(premio1)) && botonMatriz[i][j].getBackground() == Color.red) {
+                        botonMatriz[i][j].setBackground(Color.GREEN);
                         contAciert++;
                         nAcertado.setText(String.valueOf(contAciert));
                     }
                     if (botonMatriz[i][j].getText().equals(String.valueOf(premio2)) && botonMatriz[i][j].getBackground() == Color.red) {
                         contAciert++;
                         nAcertado.setText(String.valueOf(contAciert));
+                        botonMatriz[i][j].setBackground(Color.GREEN);
                     }
                     if (botonMatriz[i][j].getText().equals(String.valueOf(premio3)) && botonMatriz[i][j].getBackground() == Color.red) {
                         contAciert++;
                         nAcertado.setText(String.valueOf(contAciert));
+                        botonMatriz[i][j].setBackground(Color.GREEN);
                     }
                     if (botonMatriz[i][j].getText().equals(String.valueOf(premio4)) && botonMatriz[i][j].getBackground() == Color.red) {
                         contAciert++;
                         nAcertado.setText(String.valueOf(contAciert));
+                        botonMatriz[i][j].setBackground(Color.GREEN);
                     }
                     if (botonMatriz[i][j].getText().equals(String.valueOf(premio5)) && botonMatriz[i][j].getBackground() == Color.red) {
                         contAciert++;
                         nAcertado.setText(String.valueOf(contAciert));
+                        botonMatriz[i][j].setBackground(Color.GREEN);
                     }
                     if (botonMatriz[i][j].getText().equals(String.valueOf(premio6)) && botonMatriz[i][j].getBackground() == Color.red) {
                         contAciert++;
                         nAcertado.setText(String.valueOf(contAciert));
+                        botonMatriz[i][j].setBackground(Color.GREEN);
                     }
+                    comprobar.setEnabled(false);
+                    nAcertado.setEditable(false);
+                    nWin.setEditable(false);
 
                 }
             }
@@ -157,6 +186,7 @@ public class Bonoloto implements ActionListener {
                                 if (botonMatriz[k][l].getBackground() != Color.red) {
                                     botonMatriz[k][l].setEnabled(false);
                                     botonMatriz[k][l].setBackground(Color.LIGHT_GRAY);
+                                    comprobar.setEnabled(true);
                                 }
                             }
                         }
